@@ -30,23 +30,32 @@ public class BookServiceImplTest {
     @InjectMocks
     private BookServiceImpl underTest;
 
+    /**
+     * Tests that a Book is saved correctly using the create method of BookServiceImpl.
+     */
     @Test
     public void testThatBookIsSaved(){
+        // Create a sample Book
         final Book book = Book.builder()
         .isbn("0099572958")
         .author("Frances Hodgson Burnett")
         .title("The Secret Garden")
         .build();
 
+        // Create the corresponding BookEntity for comparison
         final BookEntity bookEntity = BookEntity.builder()
         .isbn("0099572958")
         .author("Frances Hodgson Burnett")
         .title("The Secret Garden")
         .build();
 
+        // Configure the mock behavior for the save method
         when(bookRepository.save(eq(bookEntity))).thenReturn(bookEntity);
 
+        // Invoke the create method of BookServiceImpl
         final Book result = underTest.create(book);
+
+        // Verify that the result matches the expected Book
         // assertEquals(book,null); //expected error
         assertEquals(book,result);
 
