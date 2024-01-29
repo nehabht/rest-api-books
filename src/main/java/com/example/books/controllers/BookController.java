@@ -43,7 +43,7 @@ public class BookController {
              // Call the create method of the BookService to create or update the book
             final Book saveBook = bookService.create(book);
              // Create a ResponseEntity with the saved book and HTTP status CREATED
-            final ResponseEntity<Book> response = new ResponseEntity<Book>(saveBook, HttpStatus.CREATED))
+            final ResponseEntity<Book> response = new ResponseEntity<Book>(saveBook, HttpStatus.CREATED);
             
             return response;
 
