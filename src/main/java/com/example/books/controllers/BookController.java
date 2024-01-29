@@ -7,11 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.books.domain.Book;
 import com.example.books.services.BookService;
 
-@Controller
+@RestController
 public class BookController {
     
     private final BookService bookService;
