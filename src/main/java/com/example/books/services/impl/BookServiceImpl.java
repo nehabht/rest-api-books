@@ -1,5 +1,7 @@
 package com.example.books.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ public class BookServiceImpl implements BookService{
 
     private final BookRepository bookRepository;
 
+    // Inject the repository into the service through the constructor
     @Autowired
     public BookServiceImpl(final BookRepository bookRepository){
         this.bookRepository = bookRepository;
@@ -20,12 +23,18 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Book create(final Book book){
-        //create book in db
+
+        // Create a BookEntity from the book data
         final BookEntity bookEntity =bookToBookEntity(book);
+
+        // Save the entity to the database using the repository
         final BookEntity savedBookEntity = bookRepository.save(bookEntity);
+       
+        // Convert the saved entity back to a Book object
         return bookEntityToBook(savedBookEntity);
     }
 
+    // Convert a Book object to a BookEntity
     private BookEntity bookToBookEntity(Book book){
         return BookEntity.builder()
             .isbn(book.getIsbn())
@@ -34,12 +43,23 @@ public class BookServiceImpl implements BookService{
             .build();
     }
 
+    // Convert a BookEntity to a Book object
     private Book bookEntityToBook (BookEntity bookEntity){
         return Book.builder()
             .isbn(bookEntity.getIsbn())
             .title(bookEntity.getTitle())
             .author(bookEntity.getAuthor())
             .build();
+    }
+
+    @Override
+    public Optional<Book> findById(String ibsn) {
+
+        // Find a book entity by its ISBN using the repository
+        final Optional<BookEntity> foundBook = bookRepository.findById(ibsn);
+
+        // Map the found BookEntity to a Book if present
+        return foundBook.map(book -> bookEntityToBook(book));
     }
     
 }
