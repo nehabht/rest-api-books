@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import static com.example.books.TestData.testBook;
 import static com.example.books.TestData.testBookEntity;
 
@@ -55,6 +57,23 @@ public class BookServiceImplTest {
         assertEquals(book,result);
 
 
+    }
+
+    // Test to ensure that the findById method returns an empty Optional when no book is found.
+    @Test
+    public void testThatFindByIdReturnsEmptyWhenNoBook(){
+
+        // Imagine searching for a book with a fictional ISBN that doesn't exist (123123123).
+        final String isbn = "123123123";
+
+        // Configure the mock repository to return an empty Optional when findById is called with the specified ISBN.
+        when(bookRepository.findById(eq(isbn))).thenReturn(Optional.empty());
+        
+        // Now, when the service looks for that book, we expect it not to find it and return an empty Optional.
+        final Optional<Book> result = underTest.findById(isbn);
+
+        // Verify that the result is an empty Optional, as we expect the book not to be present.
+        assertEquals(Optional.empty(), result);
     }
 
     
