@@ -169,7 +169,33 @@ public class BookControllerIT {
 
     }
 
+    /**
+     * Tests that an HTTP 204 status code is returned when attempting to delete a non-existing book.
+     *
+     * @throws Exception If an error occurs during the test execution.
+     */
+    @Test
+    public void testThatHttp204IsReturnedWhenBookDoesntExist() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/books/322"))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 
+    /**
+     * Tests that an HTTP 204 status code is returned when successfully deleting an existing book.
+     *
+     * @throws Exception If an error occurs during the test execution.
+     */
+    @Test
+    public void testThatHttp204IsReturnedWhenExistingBookIsDeleteded() throws Exception {
+
+        // Create and save a test book
+        final Book book = TestData.testBook();
+        bookService.save(book);
+
+        // Perform the HTTP DELETE request to delete the existing book
+        mockMvc.perform(MockMvcRequestBuilders.delete("/books/" + book.getIsbn()))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 
 
 

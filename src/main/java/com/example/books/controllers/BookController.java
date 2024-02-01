@@ -5,9 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,7 +23,7 @@ public class BookController {
 
     // Constructor for the BookController class.
     // It is invoked when an instance of BookController is created,
-    // and the BookService is automatically injected by Spring using the @Autowired annotation.
+    // and the BookService is automatically injected by Spring using the @Autowired annotation, not required since its the only constructor
     @Autowired
     public BookController(final BookService bookService) {
         this.bookService = bookService;
@@ -96,5 +95,11 @@ public class BookController {
         return new ResponseEntity<List<Book>>(bookService.listBooks(), HttpStatus.OK);
     }
     
+
+    @DeleteMapping(path="/books/{isbn}")
+    public ResponseEntity deleteBook(@PathVariable final String isbn) {
+        bookService.deleteBookById(isbn);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }
