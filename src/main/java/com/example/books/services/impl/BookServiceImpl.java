@@ -1,6 +1,9 @@
 package com.example.books.services.impl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +63,17 @@ public class BookServiceImpl implements BookService{
 
         // Map the found BookEntity to a Book if present
         return foundBook.map(book -> bookEntityToBook(book));
+    }
+
+    //Retrieves a list of all books from the repository.
+    @Override
+    public List<Book> listBooks() {
+
+        // Retrieve all book entities from the repository
+        final List<BookEntity> foundBooks = bookRepository.findAll();
+
+        // Map the list of BookEntity objects to a list of Book objects
+        return foundBooks.stream().map(book -> bookEntityToBook(book)).collect(Collectors.toList());
     }
     
 }
