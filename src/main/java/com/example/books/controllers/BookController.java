@@ -1,5 +1,6 @@
 package com.example.books.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +74,17 @@ public class BookController {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
     }
+
+    /**
+     * Handles the HTTP GET request to retrieve a list of all books.
+     *
+     * @return ResponseEntity with the list of books and HTTP status OK if found,
+     *         or a ResponseEntity with HTTP status NOT_FOUND if no books are present.
+     */
+    @GetMapping(path = "/books")
+    public ResponseEntity<List<Book>> listBooks(){
+        return new ResponseEntity<List<Book>>(bookService.listBooks(), HttpStatus.OK);
+    }
+    
 
 }
