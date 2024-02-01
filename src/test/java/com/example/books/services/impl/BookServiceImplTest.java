@@ -53,7 +53,7 @@ public class BookServiceImplTest {
         when(bookRepository.save(eq(bookEntity))).thenReturn(bookEntity);
 
         // Invoke the create method of BookServiceImpl
-        final Book result = underTest.create(book);
+        final Book result = underTest.save(book);
 
         // Verify that the result matches the expected Book
         // assertEquals(book,null); //expected error

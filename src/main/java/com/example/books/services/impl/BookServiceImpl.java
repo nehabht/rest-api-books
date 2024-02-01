@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Book create(final Book book){
+    public Book save(final Book book){
 
         // Create a BookEntity from the book data
         final BookEntity bookEntity =bookToBookEntity(book);

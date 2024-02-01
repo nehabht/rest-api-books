@@ -79,7 +79,7 @@ public class BookControllerIT {
     public void testThatRetriveBookReturnsHttp200AndBookWhenExists() throws Exception {
 
         final Book book = TestData.testBook();
-        bookService.create(book);
+        bookService.save(book);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getIsbn()))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -116,7 +116,7 @@ public class BookControllerIT {
         
         // Create a test book and save it to the repository
         final Book book = TestData.testBook();
-        bookService.create(book);
+        bookService.save(book);
 
         // Perform a GET request to the listBooks endpoint
         mockMvc.perform(MockMvcRequestBuilders.get("/books"))

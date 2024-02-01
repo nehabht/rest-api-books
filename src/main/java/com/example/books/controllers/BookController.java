@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,19 +39,28 @@ public class BookController {
      * @return ResponseEntity with the created or updated Book and the corresponding HTTP status.
      */
     @PutMapping(path = "/books/{isbn}")
-    public ResponseEntity<Book> createBook(
+    public ResponseEntity<Book> createUpdateBook(
         @PathVariable final String isbn, 
         @RequestBody final Book book){
 
             // Set the ISBN from the path variable to the book object
             book.setIsbn(isbn);
 
-             // Call the create method of the BookService to create or update the book
-            final Book saveBook = bookService.create(book);
-             // Create a ResponseEntity with the saved book and HTTP status CREATED
-            final ResponseEntity<Book> response = new ResponseEntity<Book>(saveBook, HttpStatus.CREATED);
+            // Check if the book already exists
+            final boolean isBookExits = bookService.isBookExits(book);
+
+            // Save the book using the bookService
+            final Book savedBook = bookService.save(book);
+
             
-            return response;
+            // Return ResponseEntity with HTTP OK if the book exists, otherwise return HTTP CREATED
+            if(isBookExits) {
+                return new ResponseEntity<Book>(savedBook, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Book>(savedBook, HttpStatus.CREATED);
+            }
+         
+            
 
     }
 
