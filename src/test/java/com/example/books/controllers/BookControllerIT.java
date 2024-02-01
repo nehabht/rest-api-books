@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class BookControllerIT {
     
     @Autowired
@@ -124,6 +127,45 @@ public class BookControllerIT {
         .andExpect(MockMvcResultMatchers.jsonPath("$.[0].isbn").value(book.getIsbn()))
         .andExpect(MockMvcResultMatchers.jsonPath("$.[0].title").value(book.getTitle()))
         .andExpect(MockMvcResultMatchers.jsonPath("$.[0].author").value(book.getAuthor()));
+
+    }
+
+    ////////////
+
+    /**
+     * Tests that updating a book via HTTP PUT returns HTTP 201.
+     *
+     * - Create a test Book object and save it to the database.
+     * - Update the author of the test book.
+     * - Convert the updated Book object to JSON format.
+     * - Perform an HTTP PUT request to update the book.
+     * - Verify that the HTTP status is OK (200).
+     * - Verify that the updated book attributes match the expected values.
+     */
+    @Test
+    public void testThatBookIsUpdatedReturnsHTTP201() throws Exception{
+
+         // Create a test Book object
+        final Book book = TestData.testBook();
+
+        // Save the test book to the database
+        bookService.save(book);
+
+        // Update the author of the test book
+        book.setAuthor("mary shelly");
+
+        // Convert the Book object to JSON format
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String bookJson = objectMapper.writeValueAsString(book);
+
+        // Perform the HTTP PUT request to update the book
+        mockMvc.perform(MockMvcRequestBuilders.put("/books/" + book.getIsbn())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(bookJson))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.isbn").value(book.getIsbn()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(book.getAuthor()));
 
     }
 
