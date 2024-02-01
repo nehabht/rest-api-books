@@ -76,5 +76,23 @@ public class BookServiceImplTest {
         assertEquals(Optional.empty(), result);
     }
 
+    // Test to ensure that the findById method returns a book when it exists in the repository.
+    @Test
+    public void testThatFindByIdReturnsEmptyWhenNBookExists(){
+
+        // Create a test Book and BookEntity
+        final Book book = testBook();
+        final BookEntity bookEntity = testBookEntity();
+       
+        // Configure the mock repository to return an Optional containing the BookEntity when findById is called with the book's ISBN.
+        when(bookRepository.findById(eq(book.getIsbn()))).thenReturn(Optional.of(bookEntity));
+        
+        // Call the findById method of the service to find the book
+        final Optional<Book> result = underTest.findById(book.getIsbn());
+
+        // Verify that the result is an Optional containing the expected Book
+        assertEquals(Optional.of(book), result);
+    }
+
     
 }
