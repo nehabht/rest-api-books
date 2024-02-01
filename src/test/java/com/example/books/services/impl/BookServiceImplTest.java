@@ -1,6 +1,7 @@
 package com.example.books.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -130,6 +131,40 @@ public class BookServiceImplTest {
 
         // Assert that the size of the returned list is 1, indicating that one book was found
         assertEquals(1, result.size());
+    }
+
+    /**
+     * Tests the isBookExists method to ensure it returns false when the book doesn't exist.
+     *
+     * Mocks the behavior of bookRepository.existsById to return false.
+     * Calls isBookExists with a test book and asserts that the result is false.
+     */
+    @Test
+    public void testIsBookExistsReturnFalseWhenBookDoesntExists(){
+
+        // Mock the behavior of bookRepository.existsById to return false
+        when(bookRepository.existsById(any())).thenReturn(false);
+
+        // Call isBookExists with a test book and assert that the result is false
+        final boolean result = underTest.isBookExits(testBook());
+        assertEquals(false, result);
+    }
+
+    /**
+     * Tests the isBookExists method to ensure it returns true when the book exists.
+     *
+     * Mocks the behavior of bookRepository.existsById to return true.
+     * Calls isBookExists with a test book and asserts that the result is true.
+     */
+    @Test
+    public void testIsBookExistsReturnTrueWhenBookDoesExists(){
+
+        // Mock the behavior of bookRepository.existsById to return true
+        when(bookRepository.existsById(any())).thenReturn(true);
+
+        // Call isBookExists with a test book and assert that the result is true
+        final boolean result = underTest.isBookExits(testBook());
+        assertEquals(true, result);
     }
 
     

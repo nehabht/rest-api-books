@@ -15,5 +15,7 @@ public interface BookService {
 
     // All books list
     List<Book> listBooks();
+
+    boolean isBookExits(Book book);
     
 }

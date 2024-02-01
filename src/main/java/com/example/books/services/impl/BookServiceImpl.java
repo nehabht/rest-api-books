@@ -75,5 +75,14 @@ public class BookServiceImpl implements BookService{
         // Map the list of BookEntity objects to a list of Book objects
         return foundBooks.stream().map(book -> bookEntityToBook(book)).collect(Collectors.toList());
     }
+
+    @Override
+    public boolean isBookExits(Book book) {
+        return bookRepository.existsById(book.getIsbn());
+    }
     
+
+    
+
+
 }
