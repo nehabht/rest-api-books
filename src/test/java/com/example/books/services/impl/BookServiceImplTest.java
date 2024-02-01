@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.books.TestData.testBook;
@@ -92,6 +94,42 @@ public class BookServiceImplTest {
 
         // Verify that the result is an Optional containing the expected Book
         assertEquals(Optional.of(book), result);
+    }
+
+    /**
+     * Tests that the listBooks method returns an empty list when no books exist.
+     */
+    @Test
+    public void testListBooksReturnsEmptyListWhenNoBooksExists(){
+
+        // Mock the behavior of bookRepository.findAll() to return an empty list by default
+        when(bookRepository.findAll()).thenReturn(new ArrayList<BookEntity>()); // default behavior line can be ommitted 
+        
+        // Call the listBooks method to retrieve the list of books
+        final List<Book> result = underTest.listBooks();
+
+         // Assert that the size of the returned list is 0, indicating that no books were found
+        assertEquals(0, result.size());
+        
+    }
+
+    /**
+     * Tests that the listBooks method returns a list of books when books exist in the repository.
+     */
+    @Test
+    public void testListBookReturnsBooksWhenExist(){
+        
+        // Create a test BookEntity using the testBookEntity method
+        final BookEntity bookEntity = testBookEntity();
+
+        // Mock the behavior of bookRepository.findAll() to return a list containing a test BookEntity
+        when(bookRepository.findAll()).thenReturn(List.of(bookEntity));
+
+        // Call the listBooks method to retrieve the list of books
+        final List<Book> result = underTest.listBooks();
+
+        // Assert that the size of the returned list is 1, indicating that one book was found
+        assertEquals(1, result.size());
     }
 
     
