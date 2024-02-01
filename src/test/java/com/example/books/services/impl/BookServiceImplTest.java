@@ -3,6 +3,8 @@ package com.example.books.services.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -165,6 +167,21 @@ public class BookServiceImplTest {
         // Call isBookExists with a test book and assert that the result is true
         final boolean result = underTest.isBookExits(testBook());
         assertEquals(true, result);
+    }
+
+    /**
+     * Tests that the deleteBookById method successfully deletes a book from the repository.
+     * 
+     * 1. Prepare an ISBN for a book to be deleted (e.g., isbn = "123123123").
+     * 2. Execute the deleteBookById method on the underTest instance 
+     *    providing the ISBN of the book to be deleted.
+     * 3. Verify that the deleteById method of the bookRepository mock is called exactly once with the specified ISBN.
+     */
+    @Test
+    public void testDeleteBookDeletesBook(){
+        final String isbn = "123123123";
+        underTest.deleteBookById(isbn);
+        verify(bookRepository,times(1)).deleteById(eq(isbn));
     }
 
     
