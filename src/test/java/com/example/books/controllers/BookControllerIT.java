@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.example.books.TestData;
 import com.example.books.domain.Book;
+import com.example.books.services.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -26,6 +27,9 @@ public class BookControllerIT {
     
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private BookService bookService;
 
     /**
      * Tests that a book is successfully created using the HTTP PUT request.
@@ -51,6 +55,40 @@ public class BookControllerIT {
         .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle()))
         .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(book.getAuthor()));
 
-}
+    }
+
+    /**
+     * Tests that a book is not successfully retrived and status 404
+     *
+     * @throws Exception If an error occurs during the test execution.
+     */
+    @Test
+    public void testThatRetriveBookReturns404WhenBookNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/123123123"))
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    /**
+     * Tests that a book is successfully retrived and status 200
+     *
+     * @throws Exception If an error occurs during the test execution.
+     */
+    @Test
+    public void testThatRetriveBookReturnsHttp200AndBookWhenExists() throws Exception {
+
+        final Book book = TestData.testBook();
+        bookService.create(book);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/" + book.getIsbn()))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.isbn").value(book.getIsbn()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(book.getTitle()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.author").value(book.getAuthor()));
+
+
+    }
+
+
+
 
 }
