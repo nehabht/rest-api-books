@@ -80,6 +80,12 @@ public class BookServiceImpl implements BookService{
     public boolean isBookExits(Book book) {
         return bookRepository.existsById(book.getIsbn());
     }
+
+    //Deletes a book from the repository based on its ISBN.
+    @Override
+    public void deleteBookById(String isbn) {
+        bookRepository.deleteById(isbn);
+    }
     
 
     

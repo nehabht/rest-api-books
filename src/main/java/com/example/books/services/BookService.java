@@ -17,5 +17,8 @@ public interface BookService {
     List<Book> listBooks();
 
     boolean isBookExits(Book book);
+
+    // Delete book by id
+    void deleteBookById(String isbn);
     
 }
