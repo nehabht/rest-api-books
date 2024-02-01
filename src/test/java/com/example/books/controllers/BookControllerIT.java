@@ -57,6 +57,8 @@ public class BookControllerIT {
 
     }
 
+    ////////////////////////////
+
     /**
      * Tests that a book is not successfully retrived and status 404
      *
@@ -87,6 +89,48 @@ public class BookControllerIT {
 
 
     }
+
+    /////////////////////////
+
+    /**
+     * Tests that the listBooks endpoint returns HTTP 200 and an empty list when no books exist.
+     *
+     * @throws Exception If an error occurs during the test execution.
+     */
+    @Test
+    public void testThatListBookReturnsHttp200EmptyListWhenNoBookExists() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/books"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().string("[]"));
+
+    }
+
+    /**
+     * Tests that the listBooks endpoint returns HTTP 200 and a list of books when books exist in the repository.
+     *
+     * @throws Exception If an error occurs during the test execution.
+     */
+    @Test
+    public void testThatListBooksReturnHttp200AndBooksWhenBooksExist() throws Exception {
+
+        
+        // Create a test book and save it to the repository
+        final Book book = TestData.testBook();
+        bookService.create(book);
+
+        // Perform a GET request to the listBooks endpoint
+        mockMvc.perform(MockMvcRequestBuilders.get("/books"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.[0].isbn").value(book.getIsbn()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.[0].title").value(book.getTitle()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.[0].author").value(book.getAuthor()));
+
+    }
+
+
+
+
+
 
 
 
